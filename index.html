@@ -1,237 +1,491 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Observer Checklist</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.page{padding:20px 24px 28px}
-.header{margin-bottom:18px}
-.header h1{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
-.header p{font-size:12px;color:var(--color-text-secondary)}
-.section-label{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--color-text-tertiary);margin:16px 0 6px}
-.row{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:6px;margin-bottom:3px;cursor:pointer;transition:background .12s}
-.row:hover{background:var(--color-background-secondary)}
-.row.checked .label{color:var(--color-text-secondary)}
-.checkbox{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .12s}
-.row.checked .checkbox{background:#1a8c5b;border-color:#1a8c5b}
-.checkmark{display:none;width:10px;height:10px}
-.row.checked .checkmark{display:block}
-.label{font-size:14px;color:var(--color-text-primary);line-height:1.4}
-.hint{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
-.badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;margin-left:8px;vertical-align:middle}
-.badge.green{background:#e2f5ec;color:#1a5c3a}
-.badge.orange{background:#fff3e0;color:#8c5200}
-.badge.red{background:#fdecea;color:#8c1a1a}
-.divider{border:none;border-top:1px solid var(--color-border-tertiary);margin:14px 0}
-.tally-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
-.tally-box{flex:1;min-width:100px;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border-tertiary)}
-.tally-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
-.tally-count{font-size:24px;font-weight:500;color:var(--color-text-primary)}
-.tally-sub{font-size:11px;color:var(--color-text-tertiary)}
-.tip-box{margin-top:16px;padding:10px 14px;background:var(--color-background-secondary);border-radius:8px;border-left:3px solid #1a8c5b}
-.tip-box p{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
-.tip-box strong{color:var(--color-text-primary);font-weight:500}
-.reset-btn{margin-top:16px;font-size:12px;color:var(--color-text-tertiary);background:none;border:1px solid var(--color-border-tertiary);padding:5px 14px;border-radius:6px;cursor:pointer}
-.reset-btn:hover{background:var(--color-background-secondary)}
-.counter-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin-bottom:3px}
-.counter-label{font-size:14px;color:var(--color-text-primary);flex:1}
-.counter-ctrl{display:flex;align-items:center;gap:6px}
-.cnt-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.cnt-btn:hover{background:var(--color-background-secondary)}
-.cnt-val{font-size:15px;font-weight:500;min-width:22px;text-align:center;color:var(--color-text-primary)}
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #1a7a52; --green-light: #e4f5ec;
+    --orange: #c26a00; --orange-light: #fff3e0;
+    --red: #b03030; --red-light: #fdecea;
+    --blue: #1a5fa8; --blue-light: #e8f0fb;
+    --gray-50: #f8f8f6; --gray-100: #efefec; --gray-200: #ddddd8;
+    --gray-400: #9e9e96; --gray-700: #3d3d38; --gray-900: #1a1a18;
+    --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.06);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; padding: 24px 16px 48px; font-size: 16px; }
+  .container { max-width: 660px; margin: 0 auto; }
+  header { margin-bottom: 20px; }
+  header h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+  header p { font-size: 15px; color: var(--gray-400); }
+
+  .names-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 14px; }
+  .names-card .card-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 10px; }
+  .names-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .field-group { display: flex; flex-direction: column; gap: 4px; }
+  .field-group label { font-size: 11px; font-weight: 500; color: var(--gray-400); }
+  .field-group input { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--gray-900); background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 7px 10px; transition: border-color .15s; }
+  .field-group input:focus { outline: none; border-color: var(--blue); background: #fff; }
+  .field-group input::placeholder { color: var(--gray-400); }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .tab-btn { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--gray-200); background: #fff; color: var(--gray-400); cursor: pointer; transition: all .15s; }
+  .tab-btn.active { background: var(--gray-900); color: #fff; border-color: var(--gray-900); }
+  .tab-btn:hover:not(.active) { border-color: var(--gray-400); color: var(--gray-700); }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .tallies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .tally-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; text-align: center; }
+  .tally-num { font-size: 32px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+  .tally-num.green { color: var(--green); }
+  .tally-num.orange { color: var(--orange); }
+  .tally-num.red { color: var(--red); }
+  .tally-label { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+
+  .tip { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px 16px; font-size: 15px; color: var(--gray-700); line-height: 1.5; border-left: 3px solid var(--green); margin-bottom: 14px; transition: border-color .3s; }
+  .tip strong { color: var(--gray-900); font-weight: 600; }
+
+  .card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; }
+  .card-header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .card-header.green { background: var(--green-light); color: var(--green); }
+  .card-header.orange { background: var(--orange-light); color: var(--orange); }
+  .card-header.red { background: var(--red-light); color: var(--red); }
+
+  .behavior-row { padding: 10px 16px 8px; border-top: 1px solid var(--gray-100); }
+  .behavior-top { display: flex; align-items: center; gap: 12px; margin-bottom: 7px; }
+  .behavior-info { flex: 1; }
+  .behavior-name { font-size: 16px; font-weight: 500; color: var(--gray-900); margin-bottom: 1px; }
+  .behavior-hint { font-size: 13px; color: var(--gray-400); line-height: 1.4; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+  .badge.green { background: var(--green-light); color: var(--green); }
+  .badge.orange { background: var(--orange-light); color: var(--orange); }
+  .badge.red { background: var(--red-light); color: var(--red); }
+
+  .counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .cnt-btn { width: 28px; height: 28px; border-radius: 7px; border: 1.5px solid var(--gray-200); background: var(--gray-50); color: var(--gray-700); font-size: 16px; font-family: 'DM Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .1s, border-color .1s; line-height: 1; }
+  .cnt-btn:hover { background: var(--gray-100); border-color: var(--gray-400); }
+  .cnt-val { font-size: 16px; font-weight: 600; min-width: 24px; text-align: center; color: var(--gray-900); font-variant-numeric: tabular-nums; }
+
+  .comment-field, .scale-comment { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--gray-700); background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; resize: vertical; min-height: 34px; transition: border-color .15s; line-height: 1.5; }
+  .comment-field:focus, .scale-comment:focus { outline: none; border-color: var(--gray-400); background: #fff; }
+  .comment-field::placeholder, .scale-comment::placeholder { color: var(--gray-400); }
+
+  .scale-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; }
+  .scale-header { padding: 12px 16px 8px; border-bottom: 1px solid var(--gray-100); }
+  .scale-title { font-size: 17px; font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+  .scale-direction { font-size: 11px; color: var(--gray-400); }
+  .scale-body { padding: 14px 16px; }
+  .anchor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px; }
+  .anchor { background: var(--gray-50); border: 1.5px solid var(--gray-100); border-radius: 7px; padding: 8px 6px; font-size: 12px; color: var(--gray-400); line-height: 1.4; text-align: center; cursor: pointer; transition: all .15s; }
+  .anchor:hover { border-color: var(--gray-400); color: var(--gray-700); background: #fff; }
+  .anchor .anchor-num { font-size: 16px; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 4px; }
+  .anchor.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .anchor.selected .anchor-num { color: var(--blue); }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .summary-cell { text-align: center; padding: 12px; background: var(--gray-50); border-radius: 8px; }
+  .summary-num { font-size: 24px; font-weight: 600; color: var(--blue); }
+  .summary-lbl { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  .r-to-q-ratio { font-size: 11px; color: var(--gray-400); text-align: center; margin-top: 6px; margin-bottom: 20px; }
+  .r-to-q-ratio span { font-weight: 600; color: var(--gray-700); }
+
+  .submit-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-top: 6px; }
+  .submit-card .card-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 12px; }
+  .submit-btn { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 12px; cursor: pointer; transition: background .15s; }
+  .submit-btn:hover { background: #15663f; }
+  .submit-btn:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+  .submit-note { font-size: 11px; color: var(--gray-400); margin-top: 8px; text-align: center; line-height: 1.5; }
+
+  /* CONFIRMATION */
+  .confirmation { display: none; position: fixed; inset: 0; background: rgba(26,26,24,.55); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
+  .confirmation.show { display: flex; }
+  .confirm-box { background: #fff; border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.18); padding: 32px 28px; max-width: 380px; width: 100%; text-align: center; }
+  .confirm-icon { font-size: 40px; margin-bottom: 12px; }
+  .confirm-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .confirm-box p { font-size: 13px; color: var(--gray-700); line-height: 1.6; margin-bottom: 20px; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+  .confirm-close { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; background: var(--gray-100); color: var(--gray-700); border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: background .15s; }
+  .confirm-close:hover { background: var(--gray-200); }
+  .confirm-reset { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: background .15s; }
+  .confirm-reset:hover { background: #15663f; }
+
+  .error-msg { font-size: 12px; color: var(--red); margin-top: 8px; text-align: center; display: none; }
 </style>
-<div class="page">
-  <div class="header">
+</head>
+<body>
+<div class="container">
+
+  <header>
     <h1>MI Observer Checklist</h1>
-    <p>Track behaviors during the 20-min interview round. Tap to log each occurrence.</p>
-  </div>
+    <p>Track behaviors and rate global scores during the 20-min interview round.</p>
+  </header>
 
-  <div class="section-label">✅ Desirable behaviors</div>
-
-  <div id="counters">
-    <div class="counter-row" id="cr_cr">
-      <div>
-        <div class="counter-label">Complex Reflection <span class="badge green">aim: 1 per question</span></div>
-        <div class="hint">Goes beyond restating — adds meaning, feeling, or implication</div>
+  <!-- NAMES -->
+  <div class="names-card">
+    <div class="card-label">Round participants</div>
+    <div class="names-grid">
+      <div class="field-group">
+        <label>Interviewer</label>
+        <input type="text" id="name-interviewer" placeholder="Name">
       </div>
-      <div class="counter-ctrl">
-        <button class="cnt-btn" onclick="adj('cr_cr',-1)">−</button>
-        <div class="cnt-val" id="v_cr_cr">0</div>
-        <button class="cnt-btn" onclick="adj('cr_cr',1)">+</button>
+      <div class="field-group">
+        <label>Interviewee</label>
+        <input type="text" id="name-interviewee" placeholder="Name">
       </div>
-    </div>
-    <div class="counter-row" id="cr_af">
-      <div>
-        <div class="counter-label">Affirmation</div>
-        <div class="hint">Genuine recognition of effort, strength, or value</div>
-      </div>
-      <div class="counter-ctrl">
-        <button class="cnt-btn" onclick="adj('cr_af',-1)">−</button>
-        <div class="cnt-val" id="v_cr_af">0</div>
-        <button class="cnt-btn" onclick="adj('cr_af',1)">+</button>
-      </div>
-    </div>
-    <div class="counter-row" id="cr_sr">
-      <div>
-        <div class="counter-label">Simple Reflection</div>
-        <div class="hint">Repeats or slightly rephrases what the client said</div>
-      </div>
-      <div class="counter-ctrl">
-        <button class="cnt-btn" onclick="adj('cr_sr',-1)">−</button>
-        <div class="cnt-val" id="v_cr_sr">0</div>
-        <button class="cnt-btn" onclick="adj('cr_sr',1)">+</button>
-      </div>
-    </div>
-    <div class="counter-row" id="cr_ea">
-      <div>
-        <div class="counter-label">Emphasizing Autonomy</div>
-        <div class="hint">Supports client's right to choose and self-direct</div>
-      </div>
-      <div class="counter-ctrl">
-        <button class="cnt-btn" onclick="adj('cr_ea',-1)">−</button>
-        <div class="cnt-val" id="v_cr_ea">0</div>
-        <button class="cnt-btn" onclick="adj('cr_ea',1)">+</button>
-      </div>
-    </div>
-    <div class="counter-row" id="cr_sc">
-      <div>
-        <div class="counter-label">Seeking Collaboration</div>
-        <div class="hint">Invites partnership, checks in, avoids directing</div>
-      </div>
-      <div class="counter-ctrl">
-        <button class="cnt-btn" onclick="adj('cr_sc',-1)">−</button>
-        <div class="cnt-val" id="v_cr_sc">0</div>
-        <button class="cnt-btn" onclick="adj('cr_sc',1)">+</button>
+      <div class="field-group">
+        <label>Observer</label>
+        <input type="text" id="name-observer" placeholder="Name">
       </div>
     </div>
   </div>
 
-  <hr class="divider">
-  <div class="section-label">⚠️ Use with caution</div>
-
-  <div class="counter-row" id="cr_q">
-    <div>
-      <div class="counter-label">Questions <span class="badge orange">avoid Q&A trap</span></div>
-      <div class="hint">Multiple questions in a row = flag for feedback</div>
-    </div>
-    <div class="counter-ctrl">
-      <button class="cnt-btn" onclick="adj('cr_q',-1)">−</button>
-      <div class="cnt-val" id="v_cr_q">0</div>
-      <button class="cnt-btn" onclick="adj('cr_q',1)">+</button>
-    </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('behaviors',this)">Behavior Counts</button>
+    <button class="tab-btn" onclick="showTab('scales',this)">Global Scales</button>
   </div>
 
-  <hr class="divider">
-  <div class="section-label">❌ Behaviors to avoid</div>
+  <!-- BEHAVIORS TAB -->
+  <div class="section active" id="tab-behaviors">
+    <div class="tallies">
+      <div class="tally-card"><div class="tally-num green" id="t-good">0</div><div class="tally-label">Desirable</div></div>
+      <div class="tally-card"><div class="tally-num orange" id="t-q">0</div><div class="tally-label">Questions</div></div>
+      <div class="tally-card"><div class="tally-num red" id="t-avoid">0</div><div class="tally-label">Avoid</div></div>
+    </div>
 
-  <div class="counter-row" id="cr_gi">
-    <div>
-      <div class="counter-label">Giving Information <span class="badge red">use ask-offer-ask</span></div>
-      <div class="hint">Providing info without first eliciting permission</div>
+    <div class="tip" id="tip"><strong>Observer tip:</strong> Aim for at least 1 reflection per question — especially complex reflections that help the client feel understood.</div>
+
+    <div class="card">
+      <div class="card-header green">✓ Desirable behaviors</div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Complex Reflection <span class="badge green">priority</span></div><div class="behavior-hint">Goes beyond restating — adds meaning, feeling, or implication</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('cr',-1)">−</button><div class="cnt-val" id="v-cr">0</div><button class="cnt-btn" onclick="adj('cr',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-cr" placeholder="Note a good example…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Affirmation</div><div class="behavior-hint">Genuine recognition of effort, strength, or value</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('af',-1)">−</button><div class="cnt-val" id="v-af">0</div><button class="cnt-btn" onclick="adj('af',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-af" placeholder="Note a good example…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Simple Reflection</div><div class="behavior-hint">Repeats or slightly rephrases what the client said</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('sr',-1)">−</button><div class="cnt-val" id="v-sr">0</div><button class="cnt-btn" onclick="adj('sr',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-sr" placeholder="Note a good example…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Emphasizing Autonomy</div><div class="behavior-hint">Supports client's right to choose and self-direct</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('ea',-1)">−</button><div class="cnt-val" id="v-ea">0</div><button class="cnt-btn" onclick="adj('ea',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-ea" placeholder="Note a good example…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Seeking Collaboration</div><div class="behavior-hint">Invites partnership, checks in, avoids directing</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('sc',-1)">−</button><div class="cnt-val" id="v-sc">0</div><button class="cnt-btn" onclick="adj('sc',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-sc" placeholder="Note a good example…"></textarea>
+      </div>
     </div>
-    <div class="counter-ctrl">
-      <button class="cnt-btn" onclick="adj('cr_gi',-1)">−</button>
-      <div class="cnt-val" id="v_cr_gi">0</div>
-      <button class="cnt-btn" onclick="adj('cr_gi',1)">+</button>
+
+    <div class="card">
+      <div class="card-header orange">⚠ Use with caution</div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Questions <span class="badge orange">avoid Q&amp;A trap</span></div><div class="behavior-hint">Multiple questions in a row — did a reflection follow?</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('q',-1)">−</button><div class="cnt-val" id="v-q">0</div><button class="cnt-btn" onclick="adj('q',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-q" placeholder="Note an example to discuss…"></textarea>
+      </div>
     </div>
+
+    <div class="card">
+      <div class="card-header red">✗ Behaviors to avoid</div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Giving Information <span class="badge red">use ask-offer-ask</span></div><div class="behavior-hint">Providing info without first eliciting permission</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('gi',-1)">−</button><div class="cnt-val" id="v-gi">0</div><button class="cnt-btn" onclick="adj('gi',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-gi" placeholder="Note an example to discuss…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Persuade with Permission <span class="badge red">use ask-offer-ask</span></div><div class="behavior-hint">Asks to share, then pushes own agenda</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('pwp',-1)">−</button><div class="cnt-val" id="v-pwp">0</div><button class="cnt-btn" onclick="adj('pwp',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-pwp" placeholder="Note an example to discuss…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Persuade</div><div class="behavior-hint">Arguing for change, pushing a point of view</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('pe',-1)">−</button><div class="cnt-val" id="v-pe">0</div><button class="cnt-btn" onclick="adj('pe',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-pe" placeholder="Note an example to discuss…"></textarea>
+      </div>
+      <div class="behavior-row">
+        <div class="behavior-top">
+          <div class="behavior-info"><div class="behavior-name">Confront</div><div class="behavior-hint">Challenging, contradicting, or labeling the client</div></div>
+          <div class="counter"><button class="cnt-btn" onclick="adj('co',-1)">−</button><div class="cnt-val" id="v-co">0</div><button class="cnt-btn" onclick="adj('co',1)">+</button></div>
+        </div>
+        <textarea class="comment-field" id="c-co" placeholder="Note an example to discuss…"></textarea>
+      </div>
+    </div>
+
+    <div class="r-to-q-ratio" id="ratio">Reflection-to-question ratio: <span>—</span></div>
   </div>
-  <div class="counter-row" id="cr_pwp">
-    <div>
-      <div class="counter-label">Persuade with Permission <span class="badge red">use ask-offer-ask</span></div>
-      <div class="hint">Asks to share, then pushes own agenda</div>
+
+  <!-- SCALES TAB -->
+  <div class="section" id="tab-scales">
+    <div class="card" style="padding:12px 16px;margin-bottom:14px;">
+      <p style="font-size:13px;color:var(--gray-700);line-height:1.6">Rate each scale <strong>1–5</strong> at the end of the interview. Click an anchor to select a score, then note a specific moment that informed your rating.</p>
     </div>
-    <div class="counter-ctrl">
-      <button class="cnt-btn" onclick="adj('cr_pwp',-1)">−</button>
-      <div class="cnt-val" id="v_cr_pwp">0</div>
-      <button class="cnt-btn" onclick="adj('cr_pwp',1)">+</button>
+
+    <div class="scale-card">
+      <div class="scale-header"><div class="scale-title">Cultivating Change Talk</div><div class="scale-direction">Low 1 ————————————— 5 High</div></div>
+      <div class="scale-body">
+        <div class="anchor-grid">
+          <div class="anchor" onclick="selectAnchor('cct',1,this)"><span class="anchor-num">1</span>No attention to client language favoring change</div>
+          <div class="anchor" onclick="selectAnchor('cct',2,this)"><span class="anchor-num">2</span>Sporadically attends; frequently misses opportunities</div>
+          <div class="anchor" onclick="selectAnchor('cct',3,this)"><span class="anchor-num">3</span>Often attends but misses some opportunities</div>
+          <div class="anchor" onclick="selectAnchor('cct',4,this)"><span class="anchor-num">4</span>Consistently attends and makes efforts to encourage it</div>
+          <div class="anchor" onclick="selectAnchor('cct',5,this)"><span class="anchor-num">5</span>Marked, consistent effort to increase depth and momentum</div>
+        </div>
+        <textarea class="scale-comment" id="note-cct" placeholder="Note a specific moment that informed this rating…"></textarea>
+      </div>
     </div>
-  </div>
-  <div class="counter-row" id="cr_pe">
-    <div>
-      <div class="counter-label">Persuade</div>
-      <div class="hint">Arguing for change, pushing a point of view</div>
+
+    <div class="scale-card">
+      <div class="scale-header"><div class="scale-title">Softening Sustain Talk</div><div class="scale-direction">Low 1 ————————————— 5 High</div></div>
+      <div class="scale-body">
+        <div class="anchor-grid">
+          <div class="anchor" onclick="selectAnchor('sst',1,this)"><span class="anchor-num">1</span>Consistently facilitates arguments for the status quo</div>
+          <div class="anchor" onclick="selectAnchor('sst',2,this)"><span class="anchor-num">2</span>Usually explores or responds to status quo language</div>
+          <div class="anchor" onclick="selectAnchor('sst',3,this)"><span class="anchor-num">3</span>Prefers status quo language but shows some shifting</div>
+          <div class="anchor" onclick="selectAnchor('sst',4,this)"><span class="anchor-num">4</span>Typically avoids emphasis on status quo language</div>
+          <div class="anchor" onclick="selectAnchor('sst',5,this)"><span class="anchor-num">5</span>Marked, consistent effort to decrease depth and momentum of sustain talk</div>
+        </div>
+        <textarea class="scale-comment" id="note-sst" placeholder="Note a specific moment that informed this rating…"></textarea>
+      </div>
     </div>
-    <div class="counter-ctrl">
-      <button class="cnt-btn" onclick="adj('cr_pe',-1)">−</button>
-      <div class="cnt-val" id="v_cr_pe">0</div>
-      <button class="cnt-btn" onclick="adj('cr_pe',1)">+</button>
+
+    <div class="scale-card">
+      <div class="scale-header"><div class="scale-title">Partnership</div><div class="scale-direction">Low 1 ————————————— 5 High</div></div>
+      <div class="scale-body">
+        <div class="anchor-grid">
+          <div class="anchor" onclick="selectAnchor('par',1,this)"><span class="anchor-num">1</span>Assumes expert role; collaboration absent</div>
+          <div class="anchor" onclick="selectAnchor('par',2,this)"><span class="anchor-num">2</span>Superficially responds to opportunities to collaborate</div>
+          <div class="anchor" onclick="selectAnchor('par',3,this)"><span class="anchor-num">3</span>Incorporates client contributions in a lukewarm or erratic way</div>
+          <div class="anchor" onclick="selectAnchor('par',4,this)"><span class="anchor-num">4</span>Fosters collaboration so client contributions impact the session</div>
+          <div class="anchor" onclick="selectAnchor('par',5,this)"><span class="anchor-num">5</span>Actively encourages power sharing; client substantially influences the session</div>
+        </div>
+        <textarea class="scale-comment" id="note-par" placeholder="Note a specific moment that informed this rating…"></textarea>
+      </div>
     </div>
-  </div>
-  <div class="counter-row" id="cr_co">
-    <div>
-      <div class="counter-label">Confront</div>
-      <div class="hint">Challenging, contradicting, or labeling the client</div>
+
+    <div class="scale-card">
+      <div class="scale-header"><div class="scale-title">Empathy</div><div class="scale-direction">Low 1 ————————————— 5 High</div></div>
+      <div class="scale-body">
+        <div class="anchor-grid">
+          <div class="anchor" onclick="selectAnchor('emp',1,this)"><span class="anchor-num">1</span>Little or no attention to client's perspective</div>
+          <div class="anchor" onclick="selectAnchor('emp',2,this)"><span class="anchor-num">2</span>Sporadic efforts; understanding may be inaccurate</div>
+          <div class="anchor" onclick="selectAnchor('emp',3,this)"><span class="anchor-num">3</span>Actively trying to understand with modest success</div>
+          <div class="anchor" onclick="selectAnchor('emp',4,this)"><span class="anchor-num">4</span>Active, repeated efforts; accurate understanding of explicit content</div>
+          <div class="anchor" onclick="selectAnchor('emp',5,this)"><span class="anchor-num">5</span>Deep understanding — including what client means but hasn't yet said</div>
+        </div>
+        <textarea class="scale-comment" id="note-emp" placeholder="Note a specific moment that informed this rating…"></textarea>
+      </div>
     </div>
-    <div class="counter-ctrl">
-      <button class="cnt-btn" onclick="adj('cr_co',-1)">−</button>
-      <div class="cnt-val" id="v_cr_co">0</div>
-      <button class="cnt-btn" onclick="adj('cr_co',1)">+</button>
+
+    <div class="card" style="padding:14px 16px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-400);margin-bottom:10px">Summary ratings</div>
+      <div class="summary-grid">
+        <div class="summary-cell"><div class="summary-num" id="s-cct">—</div><div class="summary-lbl">Cultivating Change Talk</div></div>
+        <div class="summary-cell"><div class="summary-num" id="s-sst">—</div><div class="summary-lbl">Softening Sustain Talk</div></div>
+        <div class="summary-cell"><div class="summary-num" id="s-par">—</div><div class="summary-lbl">Partnership</div></div>
+        <div class="summary-cell"><div class="summary-num" id="s-emp">—</div><div class="summary-lbl">Empathy</div></div>
+      </div>
     </div>
   </div>
 
-  <hr class="divider">
-  <div class="tally-row">
-    <div class="tally-box">
-      <div class="tally-label">Desirable</div>
-      <div class="tally-count" id="t_good">0</div>
-      <div class="tally-sub">CR + Aff + SR + EA + SC</div>
-    </div>
-    <div class="tally-box">
-      <div class="tally-label">Questions</div>
-      <div class="tally-count" id="t_q">0</div>
-      <div class="tally-sub">watch for Q&A trap</div>
-    </div>
-    <div class="tally-box">
-      <div class="tally-label">Avoid</div>
-      <div class="tally-count" id="t_bad">0</div>
-      <div class="tally-sub">GI + PWP + Persuade + Confront</div>
-    </div>
+  <!-- SUBMIT -->
+  <div class="submit-card">
+    <div class="card-label">Submit to instructor</div>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit checklist</button>
+    <div class="error-msg" id="error-msg">Something went wrong. Please try again.</div>
+    <p class="submit-note">Submits directly to your instructor — no email client needed.</p>
   </div>
 
-  <div class="tip-box" id="tip-box">
-    <p id="tip-text"><strong>Observer tip:</strong> Look for the ratio — aim for more complex reflections than questions.</p>
-  </div>
+</div>
 
-  <button class="reset-btn" onclick="resetAll()">Reset for next round</button>
+<!-- CONFIRMATION -->
+<div class="confirmation" id="confirmation">
+  <div class="confirm-box">
+    <div class="confirm-icon">✅</div>
+    <h2>Submitted!</h2>
+    <p>Your checklist has been sent to the instructor. Want to reset the form for the next round?</p>
+    <div class="confirm-actions">
+      <button class="confirm-close" onclick="closeConfirm()">Keep data</button>
+      <button class="confirm-reset" onclick="resetAndClose()">Reset for next round</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const counts = {cr_cr:0,cr_af:0,cr_sr:0,cr_ea:0,cr_sc:0,cr_q:0,cr_gi:0,cr_pwp:0,cr_pe:0,cr_co:0};
-const goodKeys = ['cr_cr','cr_af','cr_sr','cr_ea','cr_sc'];
-const badKeys = ['cr_gi','cr_pwp','cr_pe','cr_co'];
-
-function adj(key, delta) {
-  counts[key] = Math.max(0, counts[key] + delta);
-  document.getElementById('v_'+key).textContent = counts[key];
-  updateTallies();
-}
-
-function updateTallies() {
-  const good = goodKeys.reduce((s,k)=>s+counts[k],0);
-  const bad = badKeys.reduce((s,k)=>s+counts[k],0);
-  const q = counts.cr_q;
-  document.getElementById('t_good').textContent = good;
-  document.getElementById('t_bad').textContent = bad;
-  document.getElementById('t_q').textContent = q;
-
-  const tip = document.getElementById('tip-text');
-  const box = document.getElementById('tip-box');
-
-  if (bad >= 2) {
-    tip.innerHTML = '<strong>Feedback focus:</strong> Multiple avoid behaviors noted — great debrief opportunity. What would ask-offer-ask look like here?';
-    box.style.borderLeftColor = '#c0392b';
-  } else if (q >= 3) {
-    tip.innerHTML = '<strong>Q&A trap alert:</strong> ' + q + ' questions logged. Did a reflection follow each one?';
-    box.style.borderLeftColor = '#e67e22';
-  } else if (counts.cr_cr >= 2) {
-    tip.innerHTML = '<strong>Nice work:</strong> Strong complex reflection count. Point out specific moments in the debrief.';
-    box.style.borderLeftColor = '#1a8c5b';
-  } else {
-    tip.innerHTML = '<strong>Observer tip:</strong> Look for the ratio — aim for more complex reflections than questions.';
-    box.style.borderLeftColor = '#1a8c5b';
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+id).classList.add('active');
+    btn.classList.add('active');
   }
-}
 
-function resetAll() {
-  Object.keys(counts).forEach(k => { counts[k]=0; document.getElementById('v_'+k).textContent='0'; });
-  updateTallies();
-}
+  const counts = {cr:0,af:0,sr:0,ea:0,sc:0,q:0,gi:0,pwp:0,pe:0,co:0};
+  const goodKeys = ['cr','af','sr','ea','sc'];
+  const avoidKeys = ['gi','pwp','pe','co'];
+
+  function adj(key, delta) {
+    counts[key] = Math.max(0, counts[key] + delta);
+    document.getElementById('v-'+key).textContent = counts[key];
+    update();
+  }
+
+  function update() {
+    const good = goodKeys.reduce((s,k)=>s+counts[k],0);
+    const avoid = avoidKeys.reduce((s,k)=>s+counts[k],0);
+    const q = counts.q;
+    document.getElementById('t-good').textContent = good;
+    document.getElementById('t-q').textContent = q;
+    document.getElementById('t-avoid').textContent = avoid;
+    const reflections = counts.cr + counts.sr;
+    const ratioEl = document.getElementById('ratio');
+    if (q > 0) {
+      ratioEl.innerHTML = 'Reflection-to-question ratio: <span>' + (reflections/q).toFixed(1) + ':1</span> (aim for ≥1:1)';
+    } else if (reflections > 0) {
+      ratioEl.innerHTML = 'Reflection-to-question ratio: <span>no questions yet ✓</span>';
+    } else {
+      ratioEl.innerHTML = 'Reflection-to-question ratio: <span>—</span>';
+    }
+    const tip = document.getElementById('tip');
+    if (avoid >= 2) {
+      tip.style.borderLeftColor = '#b03030';
+      tip.innerHTML = '<strong>Debrief focus:</strong> Multiple avoid behaviors logged. Walk through what ask-offer-ask would look like in those moments.';
+    } else if (q >= 3 && counts.cr < q) {
+      tip.style.borderLeftColor = '#c26a00';
+      tip.innerHTML = '<strong>Q&amp;A trap alert:</strong> ' + q + ' questions logged — did a reflection follow each one?';
+    } else if (counts.cr >= 3) {
+      tip.style.borderLeftColor = '#1a7a52';
+      tip.innerHTML = '<strong>Strong work:</strong> Great complex reflection count. Note specific moments for debrief.';
+    } else {
+      tip.style.borderLeftColor = '#1a7a52';
+      tip.innerHTML = '<strong>Observer tip:</strong> Aim for at least 1 reflection per question — especially complex reflections that help the client feel understood.';
+    }
+  }
+
+  const scaleVals = {cct:null,sst:null,par:null,emp:null};
+  const scaleNames = {cct:'Cultivating Change Talk',sst:'Softening Sustain Talk',par:'Partnership',emp:'Empathy'};
+
+  function selectAnchor(scale, val, el) {
+    el.closest('.anchor-grid').querySelectorAll('.anchor').forEach(a => a.classList.remove('selected'));
+    el.classList.add('selected');
+    scaleVals[scale] = val;
+    document.getElementById('s-'+scale).textContent = val;
+  }
+
+  async function submitForm() {
+    const btn = document.getElementById('submit-btn');
+    const errMsg = document.getElementById('error-msg');
+    errMsg.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const reflections = counts.cr + counts.sr;
+    const q = counts.q;
+    const ratio = q > 0 ? (reflections/q).toFixed(1) + ':1' : (reflections > 0 ? 'No questions' : 'N/A');
+
+    const data = {
+      // Participants
+      Interviewer: document.getElementById('name-interviewer').value.trim() || '(not entered)',
+      Interviewee: document.getElementById('name-interviewee').value.trim() || '(not entered)',
+      Observer: document.getElementById('name-observer').value.trim() || '(not entered)',
+
+      // Behavior counts
+      'Complex Reflection (count)': counts.cr,
+      'Complex Reflection (example)': document.getElementById('c-cr').value.trim(),
+      'Affirmation (count)': counts.af,
+      'Affirmation (example)': document.getElementById('c-af').value.trim(),
+      'Simple Reflection (count)': counts.sr,
+      'Simple Reflection (example)': document.getElementById('c-sr').value.trim(),
+      'Emphasizing Autonomy (count)': counts.ea,
+      'Emphasizing Autonomy (example)': document.getElementById('c-ea').value.trim(),
+      'Seeking Collaboration (count)': counts.sc,
+      'Seeking Collaboration (example)': document.getElementById('c-sc').value.trim(),
+      'Questions (count)': counts.q,
+      'Questions (example)': document.getElementById('c-q').value.trim(),
+      'Giving Information (count)': counts.gi,
+      'Giving Information (example)': document.getElementById('c-gi').value.trim(),
+      'Persuade with Permission (count)': counts.pwp,
+      'Persuade with Permission (example)': document.getElementById('c-pwp').value.trim(),
+      'Persuade (count)': counts.pe,
+      'Persuade (example)': document.getElementById('c-pe').value.trim(),
+      'Confront (count)': counts.co,
+      'Confront (example)': document.getElementById('c-co').value.trim(),
+      'Reflection-to-Question Ratio': ratio,
+
+      // Global scales
+      'Cultivating Change Talk (rating)': scaleVals.cct !== null ? scaleVals.cct + '/5' : 'Not rated',
+      'Cultivating Change Talk (note)': document.getElementById('note-cct').value.trim(),
+      'Softening Sustain Talk (rating)': scaleVals.sst !== null ? scaleVals.sst + '/5' : 'Not rated',
+      'Softening Sustain Talk (note)': document.getElementById('note-sst').value.trim(),
+      'Partnership (rating)': scaleVals.par !== null ? scaleVals.par + '/5' : 'Not rated',
+      'Partnership (note)': document.getElementById('note-par').value.trim(),
+      'Empathy (rating)': scaleVals.emp !== null ? scaleVals.emp + '/5' : 'Not rated',
+      'Empathy (note)': document.getElementById('note-emp').value.trim(),
+    };
+
+    try {
+      const res = await fetch('https://formspree.io/f/xreobqqn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        document.getElementById('confirmation').classList.add('show');
+      } else {
+        throw new Error('Server error');
+      }
+    } catch(e) {
+      errMsg.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit checklist';
+    }
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmation').classList.remove('show');
+  }
+
+  function resetAndClose() {
+    closeConfirm();
+    Object.keys(counts).forEach(k => { counts[k]=0; document.getElementById('v-'+k).textContent='0'; });
+    document.querySelectorAll('.comment-field').forEach(t => t.value='');
+    document.getElementById('name-interviewer').value='';
+    document.getElementById('name-interviewee').value='';
+    document.getElementById('name-observer').value='';
+    Object.keys(scaleVals).forEach(k => { scaleVals[k]=null; document.getElementById('s-'+k).textContent='—'; });
+    document.querySelectorAll('.anchor').forEach(a => a.classList.remove('selected'));
+    document.querySelectorAll('.scale-comment').forEach(t => t.value='');
+    update();
+  }
 </script>
+</body>
+</html>
