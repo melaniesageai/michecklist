@@ -1,0 +1,237 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.page{padding:20px 24px 28px}
+.header{margin-bottom:18px}
+.header h1{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.header p{font-size:12px;color:var(--color-text-secondary)}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--color-text-tertiary);margin:16px 0 6px}
+.row{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:6px;margin-bottom:3px;cursor:pointer;transition:background .12s}
+.row:hover{background:var(--color-background-secondary)}
+.row.checked .label{color:var(--color-text-secondary)}
+.checkbox{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.row.checked .checkbox{background:#1a8c5b;border-color:#1a8c5b}
+.checkmark{display:none;width:10px;height:10px}
+.row.checked .checkmark{display:block}
+.label{font-size:14px;color:var(--color-text-primary);line-height:1.4}
+.hint{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;margin-left:8px;vertical-align:middle}
+.badge.green{background:#e2f5ec;color:#1a5c3a}
+.badge.orange{background:#fff3e0;color:#8c5200}
+.badge.red{background:#fdecea;color:#8c1a1a}
+.divider{border:none;border-top:1px solid var(--color-border-tertiary);margin:14px 0}
+.tally-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.tally-box{flex:1;min-width:100px;padding:10px 14px;border-radius:8px;border:1px solid var(--color-border-tertiary)}
+.tally-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.tally-count{font-size:24px;font-weight:500;color:var(--color-text-primary)}
+.tally-sub{font-size:11px;color:var(--color-text-tertiary)}
+.tip-box{margin-top:16px;padding:10px 14px;background:var(--color-background-secondary);border-radius:8px;border-left:3px solid #1a8c5b}
+.tip-box p{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.tip-box strong{color:var(--color-text-primary);font-weight:500}
+.reset-btn{margin-top:16px;font-size:12px;color:var(--color-text-tertiary);background:none;border:1px solid var(--color-border-tertiary);padding:5px 14px;border-radius:6px;cursor:pointer}
+.reset-btn:hover{background:var(--color-background-secondary)}
+.counter-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin-bottom:3px}
+.counter-label{font-size:14px;color:var(--color-text-primary);flex:1}
+.counter-ctrl{display:flex;align-items:center;gap:6px}
+.cnt-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.cnt-btn:hover{background:var(--color-background-secondary)}
+.cnt-val{font-size:15px;font-weight:500;min-width:22px;text-align:center;color:var(--color-text-primary)}
+</style>
+<div class="page">
+  <div class="header">
+    <h1>MI Observer Checklist</h1>
+    <p>Track behaviors during the 20-min interview round. Tap to log each occurrence.</p>
+  </div>
+
+  <div class="section-label">✅ Desirable behaviors</div>
+
+  <div id="counters">
+    <div class="counter-row" id="cr_cr">
+      <div>
+        <div class="counter-label">Complex Reflection <span class="badge green">aim: 1 per question</span></div>
+        <div class="hint">Goes beyond restating — adds meaning, feeling, or implication</div>
+      </div>
+      <div class="counter-ctrl">
+        <button class="cnt-btn" onclick="adj('cr_cr',-1)">−</button>
+        <div class="cnt-val" id="v_cr_cr">0</div>
+        <button class="cnt-btn" onclick="adj('cr_cr',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row" id="cr_af">
+      <div>
+        <div class="counter-label">Affirmation</div>
+        <div class="hint">Genuine recognition of effort, strength, or value</div>
+      </div>
+      <div class="counter-ctrl">
+        <button class="cnt-btn" onclick="adj('cr_af',-1)">−</button>
+        <div class="cnt-val" id="v_cr_af">0</div>
+        <button class="cnt-btn" onclick="adj('cr_af',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row" id="cr_sr">
+      <div>
+        <div class="counter-label">Simple Reflection</div>
+        <div class="hint">Repeats or slightly rephrases what the client said</div>
+      </div>
+      <div class="counter-ctrl">
+        <button class="cnt-btn" onclick="adj('cr_sr',-1)">−</button>
+        <div class="cnt-val" id="v_cr_sr">0</div>
+        <button class="cnt-btn" onclick="adj('cr_sr',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row" id="cr_ea">
+      <div>
+        <div class="counter-label">Emphasizing Autonomy</div>
+        <div class="hint">Supports client's right to choose and self-direct</div>
+      </div>
+      <div class="counter-ctrl">
+        <button class="cnt-btn" onclick="adj('cr_ea',-1)">−</button>
+        <div class="cnt-val" id="v_cr_ea">0</div>
+        <button class="cnt-btn" onclick="adj('cr_ea',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row" id="cr_sc">
+      <div>
+        <div class="counter-label">Seeking Collaboration</div>
+        <div class="hint">Invites partnership, checks in, avoids directing</div>
+      </div>
+      <div class="counter-ctrl">
+        <button class="cnt-btn" onclick="adj('cr_sc',-1)">−</button>
+        <div class="cnt-val" id="v_cr_sc">0</div>
+        <button class="cnt-btn" onclick="adj('cr_sc',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="section-label">⚠️ Use with caution</div>
+
+  <div class="counter-row" id="cr_q">
+    <div>
+      <div class="counter-label">Questions <span class="badge orange">avoid Q&A trap</span></div>
+      <div class="hint">Multiple questions in a row = flag for feedback</div>
+    </div>
+    <div class="counter-ctrl">
+      <button class="cnt-btn" onclick="adj('cr_q',-1)">−</button>
+      <div class="cnt-val" id="v_cr_q">0</div>
+      <button class="cnt-btn" onclick="adj('cr_q',1)">+</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="section-label">❌ Behaviors to avoid</div>
+
+  <div class="counter-row" id="cr_gi">
+    <div>
+      <div class="counter-label">Giving Information <span class="badge red">use ask-offer-ask</span></div>
+      <div class="hint">Providing info without first eliciting permission</div>
+    </div>
+    <div class="counter-ctrl">
+      <button class="cnt-btn" onclick="adj('cr_gi',-1)">−</button>
+      <div class="cnt-val" id="v_cr_gi">0</div>
+      <button class="cnt-btn" onclick="adj('cr_gi',1)">+</button>
+    </div>
+  </div>
+  <div class="counter-row" id="cr_pwp">
+    <div>
+      <div class="counter-label">Persuade with Permission <span class="badge red">use ask-offer-ask</span></div>
+      <div class="hint">Asks to share, then pushes own agenda</div>
+    </div>
+    <div class="counter-ctrl">
+      <button class="cnt-btn" onclick="adj('cr_pwp',-1)">−</button>
+      <div class="cnt-val" id="v_cr_pwp">0</div>
+      <button class="cnt-btn" onclick="adj('cr_pwp',1)">+</button>
+    </div>
+  </div>
+  <div class="counter-row" id="cr_pe">
+    <div>
+      <div class="counter-label">Persuade</div>
+      <div class="hint">Arguing for change, pushing a point of view</div>
+    </div>
+    <div class="counter-ctrl">
+      <button class="cnt-btn" onclick="adj('cr_pe',-1)">−</button>
+      <div class="cnt-val" id="v_cr_pe">0</div>
+      <button class="cnt-btn" onclick="adj('cr_pe',1)">+</button>
+    </div>
+  </div>
+  <div class="counter-row" id="cr_co">
+    <div>
+      <div class="counter-label">Confront</div>
+      <div class="hint">Challenging, contradicting, or labeling the client</div>
+    </div>
+    <div class="counter-ctrl">
+      <button class="cnt-btn" onclick="adj('cr_co',-1)">−</button>
+      <div class="cnt-val" id="v_cr_co">0</div>
+      <button class="cnt-btn" onclick="adj('cr_co',1)">+</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="tally-row">
+    <div class="tally-box">
+      <div class="tally-label">Desirable</div>
+      <div class="tally-count" id="t_good">0</div>
+      <div class="tally-sub">CR + Aff + SR + EA + SC</div>
+    </div>
+    <div class="tally-box">
+      <div class="tally-label">Questions</div>
+      <div class="tally-count" id="t_q">0</div>
+      <div class="tally-sub">watch for Q&A trap</div>
+    </div>
+    <div class="tally-box">
+      <div class="tally-label">Avoid</div>
+      <div class="tally-count" id="t_bad">0</div>
+      <div class="tally-sub">GI + PWP + Persuade + Confront</div>
+    </div>
+  </div>
+
+  <div class="tip-box" id="tip-box">
+    <p id="tip-text"><strong>Observer tip:</strong> Look for the ratio — aim for more complex reflections than questions.</p>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">Reset for next round</button>
+</div>
+
+<script>
+const counts = {cr_cr:0,cr_af:0,cr_sr:0,cr_ea:0,cr_sc:0,cr_q:0,cr_gi:0,cr_pwp:0,cr_pe:0,cr_co:0};
+const goodKeys = ['cr_cr','cr_af','cr_sr','cr_ea','cr_sc'];
+const badKeys = ['cr_gi','cr_pwp','cr_pe','cr_co'];
+
+function adj(key, delta) {
+  counts[key] = Math.max(0, counts[key] + delta);
+  document.getElementById('v_'+key).textContent = counts[key];
+  updateTallies();
+}
+
+function updateTallies() {
+  const good = goodKeys.reduce((s,k)=>s+counts[k],0);
+  const bad = badKeys.reduce((s,k)=>s+counts[k],0);
+  const q = counts.cr_q;
+  document.getElementById('t_good').textContent = good;
+  document.getElementById('t_bad').textContent = bad;
+  document.getElementById('t_q').textContent = q;
+
+  const tip = document.getElementById('tip-text');
+  const box = document.getElementById('tip-box');
+
+  if (bad >= 2) {
+    tip.innerHTML = '<strong>Feedback focus:</strong> Multiple avoid behaviors noted — great debrief opportunity. What would ask-offer-ask look like here?';
+    box.style.borderLeftColor = '#c0392b';
+  } else if (q >= 3) {
+    tip.innerHTML = '<strong>Q&A trap alert:</strong> ' + q + ' questions logged. Did a reflection follow each one?';
+    box.style.borderLeftColor = '#e67e22';
+  } else if (counts.cr_cr >= 2) {
+    tip.innerHTML = '<strong>Nice work:</strong> Strong complex reflection count. Point out specific moments in the debrief.';
+    box.style.borderLeftColor = '#1a8c5b';
+  } else {
+    tip.innerHTML = '<strong>Observer tip:</strong> Look for the ratio — aim for more complex reflections than questions.';
+    box.style.borderLeftColor = '#1a8c5b';
+  }
+}
+
+function resetAll() {
+  Object.keys(counts).forEach(k => { counts[k]=0; document.getElementById('v_'+k).textContent='0'; });
+  updateTallies();
+}
+</script>
